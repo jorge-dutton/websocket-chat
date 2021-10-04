@@ -1,0 +1,42 @@
+<div class="card mx-4 my-4 resizable" style="width: 80%; height: 40em; margin: auto;">
+    <div class="card-header">
+        <ul class="nav nav-pills nav-header-pills">
+            <li class="nav-item mr-2" *ngIf="!connected">
+                <input type="text" [(ngModel)]="message.username" class="form-control" placeholder="Your username..." name="username">
+            </li>
+            <li class="nav-item mr-2">
+                <button class="btn btn-success" type="button" (click)="connect()" *ngIf="!connected" [disabled]="!message.username">Connect</button>
+            </li>
+            <li class="nav-item">
+                <button class="btn btn-warning" type="button" (click)="disconnect()" *ngIf="connected">Disconnect</button>
+            </li>
+        </ul>
+
+    </div>
+
+    <div #scrollChat [scrollTop]="scrollChat.scrollHeight" class="card-body" style="overflow-y: scroll; height: 35em;" *ngIf="connected">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item-light" *ngFor="let message of messages">
+                <span *ngIf="message.type == 'NEW_USER'">
+                    {{message.date | date:'shortTime'}} @ {{message.text}} <span [ngStyle]="{'color': message.color}">{{message.username}}</span>
+                </span>
+                <span *ngIf="message.type == 'MESSAGE'">
+                    {{message.date | date:'shortTime'}} <span [ngStyle]="{'color': message.color}">{{message.username}}</span> says:<br /> {{message.text}}
+                </span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="card-footer" *ngIf="connected">
+        <form class="form-inline">
+            <div class="input-group mb-3 ">
+                <div class="input-group-prepend">
+                    <button class="btn btn-primary" type="submit" (click)="sendMessage()">Send</button>
+                </div>
+                <input type="text" [(ngModel)]="message.text" class="form-control" placeholder="Send message..." name="text" (keyup)="writingEvent()">
+
+            </div>
+        </form>
+        <div>{{writing}}</div>
+    </div>
+</div>
